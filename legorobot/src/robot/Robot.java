@@ -26,6 +26,6 @@ public class Robot {
 		System.out.println("Test complete.\nPress any button to exit program.");
 		Button.waitForAnyPress();
 		
-		//ngfnfhgfdfdf
+		//Test 2 
 	}
 }
