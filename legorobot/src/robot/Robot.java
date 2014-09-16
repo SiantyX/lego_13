@@ -21,8 +21,10 @@ public class Robot {
 		engineC.stop();
 		Thread.sleep(1000);
 		engineA.forward();
+		engineC.backward();
 		Thread.sleep(2000);
 		engineA.stop();
+		engineC.stop();
 		System.out.println("Test complete.\nPress any button to exit program.");
 		Button.waitForAnyPress();
 		
