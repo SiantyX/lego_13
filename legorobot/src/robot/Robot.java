@@ -20,8 +20,7 @@ public class Robot {
 		engineA.stop();
 		engineC.stop();
 		Thread.sleep(1000);
-		engineA.forward();
-		engineC.backward();
+		engineA.rotate(360);
 		Thread.sleep(2000);
 		engineA.stop();
 		engineC.stop();
