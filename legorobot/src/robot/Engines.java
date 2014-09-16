@@ -2,6 +2,7 @@ package robot;
 
 import java.util.ArrayList;
 
+import lejos.nxt.Battery;
 import lejos.nxt.NXTRegulatedMotor;
 
 public class Engines {
@@ -28,6 +29,21 @@ public class Engines {
 	public void backward() {
 		for(NXTRegulatedMotor motor : motors) {
 			motor.backward();
+		}
+	}
+	
+	/**
+	 * @param speed 0-100
+	 */
+	public void setSpeed(float speed) {
+		if(speed > 100)
+			speed = 100;
+		else if(speed < 0)
+			speed = 0;
+		
+		float volt = Battery.getVoltage();
+		for(NXTRegulatedMotor motor : motors) {
+			motor.setSpeed(volt * speed);
 		}
 	}
 }

@@ -12,6 +12,8 @@ public class Robot {
 		
 		Engines nxtEngines = new Engines(engineA, engineC);
 		
+		nxtEngines.setSpeed(80);
+		
 		nxtEngines.forward();
 		Thread.sleep(2000);
 		nxtEngines.stop();
