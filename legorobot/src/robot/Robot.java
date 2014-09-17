@@ -3,15 +3,37 @@ import lejos.nxt.*;
 
 public class Robot {
 
+	private static final MotorPort LEFT_MOTOR_PORT = MotorPort.A;
+	private static final MotorPort RIGHT_MOTOR_PORT = MotorPort.C;
+	private static final SensorPort LIGHT_SENSOR_PORT = SensorPort.S1;
+
+	
 	public static void main(String[] args) throws InterruptedException {
 		System.out.println("Press any button to go run test.");
 		Button.waitForAnyPress();
 		
-		NXTRegulatedMotor engineA = new NXTRegulatedMotor(MotorPort.A);
-		NXTRegulatedMotor engineC = new NXTRegulatedMotor(MotorPort.C);
+		NXTRegulatedMotor engineA = new NXTRegulatedMotor(LEFT_MOTOR_PORT);
+		NXTRegulatedMotor engineC = new NXTRegulatedMotor(RIGHT_MOTOR_PORT);
 		
 		Engines nxtEngines = new Engines(engineA, engineC);
 		
+		//handledning 3
+		LightSensor lightSensor = new LightSensor(LIGHT_SENSOR_PORT);
+		
+		nxtEngines.setSpeed(30);
+		
+		nxtEngines.forward();
+		
+		int lightVal = 0;
+		while(true) {
+			lightVal = lightSensor.readValue();
+			if(lightVal > 630) {
+				nxtEngines.stop();
+				break;
+			}
+		}
+		
+		// handledning 2
 		nxtEngines.setSpeed(80);
 		
 		nxtEngines.forward();
