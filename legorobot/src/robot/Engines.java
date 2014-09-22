@@ -16,7 +16,7 @@ public class Engines {
 	
 	public void stop() {
 		for(NXTRegulatedMotor motor : motors) {
-			motor.stop();
+			motor.stop(true);
 		}
 	}
 	

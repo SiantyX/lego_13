@@ -9,17 +9,57 @@ public class Robot {
 
 	
 	public static void main(String[] args) throws InterruptedException {
-		System.out.println("Press any button to go run test.");
+		
+		Robot robot = new Robot();
+		robot.initRobot();
+		
+		//robot.handledning2();
+		robot.handledning3();
+		//robot.standardRun();
+		//robot.complicatedRun();
+	}
+	
+	//--------------------------------------------------------------------
+	
+	
+	NXTRegulatedMotor engineA;
+	NXTRegulatedMotor engineC;
+	
+	Engines nxtEngines;
+	
+	LightSensor lightSensor;
+	
+	
+	public void initRobot() {
+		engineA = new NXTRegulatedMotor(LEFT_MOTOR_PORT);
+		engineC = new NXTRegulatedMotor(RIGHT_MOTOR_PORT);
+		
+		nxtEngines = new Engines(engineA, engineC);
+		
+		lightSensor = new LightSensor(LIGHT_SENSOR_PORT);
+		
+		System.out.println("Press any button to WIN!.");
 		Button.waitForAnyPress();
+	}
+	
+	/**
+	 * Spin until robot finds a target then go forward and try to push it out.
+	 */
+	public void standardRun() {
 		
-		NXTRegulatedMotor engineA = new NXTRegulatedMotor(LEFT_MOTOR_PORT);
-		NXTRegulatedMotor engineC = new NXTRegulatedMotor(RIGHT_MOTOR_PORT);
-		
-		Engines nxtEngines = new Engines(engineA, engineC);
-		
-		//handledning 3
-		LightSensor lightSensor = new LightSensor(LIGHT_SENSOR_PORT);
-		
+	}
+	
+	/**
+	 * TBA
+	 */
+	public void complicatedRun() {
+		// code here
+	}
+	
+	/**
+	 * Moves robot forward until it reaches a black line and then stops.
+	 */
+	public void handledning3() {
 		nxtEngines.setSpeed(30);
 		
 		nxtEngines.forward();
@@ -32,8 +72,13 @@ public class Robot {
 				break;
 			}
 		}
-		
-		// handledning 2
+	}
+	
+	/**
+	 * Moves robot forward, backwards and then spins.
+	 * @throws InterruptedException
+	 */
+	public void handledning2() throws InterruptedException {
 		nxtEngines.setSpeed(80);
 		
 		nxtEngines.forward();
@@ -49,7 +94,5 @@ public class Robot {
 		nxtEngines.stop();
 		System.out.println("Test complete.\nPress any button to exit program.");
 		Button.waitForAnyPress();
-		
-		//Test 2 
 	}
 }
