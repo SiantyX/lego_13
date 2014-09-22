@@ -6,7 +6,7 @@ public class Robot {
 	private static final MotorPort LEFT_MOTOR_PORT = MotorPort.A;
 	private static final MotorPort RIGHT_MOTOR_PORT = MotorPort.C;
 	private static final SensorPort LIGHT_SENSOR_PORT = SensorPort.S1;
-
+	//private static final SensorPort MOTION_SENSOR_PORT= SensorPort.S2;
 	
 	public static void main(String[] args) throws InterruptedException {
 		
@@ -29,6 +29,8 @@ public class Robot {
 	
 	LightSensor lightSensor;
 	
+	//MotionSensor motionSensor;
+	
 	
 	public void initRobot() {
 		engineA = new NXTRegulatedMotor(LEFT_MOTOR_PORT);
@@ -37,6 +39,8 @@ public class Robot {
 		nxtEngines = new Engines(engineA, engineC);
 		
 		lightSensor = new LightSensor(LIGHT_SENSOR_PORT);
+		
+		
 		
 		System.out.println("Press any button to WIN!.");
 		Button.waitForAnyPress();
