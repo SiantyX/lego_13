@@ -6,7 +6,7 @@ public class Robot {
 	private static final MotorPort LEFT_MOTOR_PORT = MotorPort.A;
 	private static final MotorPort RIGHT_MOTOR_PORT = MotorPort.C;
 	private static final SensorPort LIGHT_SENSOR_PORT = SensorPort.S1;
-	//private static final SensorPort MOTION_SENSOR_PORT= SensorPort.S2;
+	private static final SensorPort MOTION_SENSOR_PORT= SensorPort.S2;
 	
 	public static void main(String[] args) throws InterruptedException {
 		
@@ -29,7 +29,7 @@ public class Robot {
 	
 	LightSensor lightSensor;
 	
-	//MotionSensor motionSensor;
+	UltrasonicSensor motionSensor;
 	
 	
 	public void initRobot() {
@@ -40,7 +40,7 @@ public class Robot {
 		
 		lightSensor = new LightSensor(LIGHT_SENSOR_PORT);
 		
-		
+		motionSensor = new UltrasonicSensor(MOTION_SENSOR_PORT);
 		
 		System.out.println("Press any button to WIN!.");
 		Button.waitForAnyPress();
@@ -50,6 +50,30 @@ public class Robot {
 	 * Spin until robot finds a target then go forward and try to push it out.
 	 */
 	public void standardRun() {
+		lightSensor.setFloodlight(true);
+		motionSensor.continuous();
+		
+		int range = 999;
+		while(true) {
+			// check for black line
+			if(lightSensor.readValue() > 630) {
+				engineA.rotate(180, false);
+				continue;
+			}
+			
+			// get distance to object in sight
+			range = motionSensor.getDistance();
+			
+			// if no object or too far away, ie off the table, rotate
+			if(range > 120) {
+				engineA.rotate(360, true);
+			}
+			
+			// if object in range go forward
+			else if(range < 120) {
+				nxtEngines.forward();
+			}
+		}
 		
 	}
 	
