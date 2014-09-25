@@ -14,8 +14,8 @@ public class Robot {
 		robot.initRobot();
 		
 		//robot.handledning2();
-		robot.handledning3();
-		//robot.standardRun();
+		//robot.handledning3();
+		robot.standardRun();
 		//robot.complicatedRun();
 	}
 	
@@ -48,8 +48,9 @@ public class Robot {
 	
 	/**
 	 * Spin until robot finds a target then go forward and try to push it out.
+	 * @throws InterruptedException 
 	 */
-	public void standardRun() {
+	public void standardRun() throws InterruptedException {
 		lightSensor.setFloodlight(true);
 		motionSensor.continuous();
 		
@@ -58,6 +59,8 @@ public class Robot {
 			// check for black line
 			if(lightSensor.readValue() > 630) {
 				engineA.rotate(180, false);
+				nxtEngines.forward();
+				Thread.sleep(1000);
 				continue;
 			}
 			
