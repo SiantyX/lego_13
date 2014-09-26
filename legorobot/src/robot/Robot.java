@@ -7,45 +7,34 @@ public class Robot {
 	private static final MotorPort RIGHT_MOTOR_PORT = MotorPort.C;
 	private static final SensorPort LIGHT_SENSOR_PORT = SensorPort.S1;
 	private static final SensorPort MOTION_SENSOR_PORT= SensorPort.S2;
-	
+
+	Engines engines;
+	LightSensor lightSensor;
+	UltrasonicSensor motionSensor;
+
 	public static void main(String[] args) throws InterruptedException {
-		
 		Robot robot = new Robot();
 		robot.initRobot();
-		
+
 		//robot.handledning2();
 		//robot.handledning3();
 		robot.standardRun();
 		//robot.complicatedRun();
 	}
-	
+
 	//--------------------------------------------------------------------
-	
-	
-	NXTRegulatedMotor engineA;
-	NXTRegulatedMotor engineC;
-	
-	Engines nxtEngines;
-	
-	LightSensor lightSensor;
-	
-	UltrasonicSensor motionSensor;
-	
-	
+
 	public void initRobot() {
-		engineA = new NXTRegulatedMotor(LEFT_MOTOR_PORT);
-		engineC = new NXTRegulatedMotor(RIGHT_MOTOR_PORT);
-		
-		nxtEngines = new Engines(engineA, engineC);
-		
+		engines = new Engines(new Engine(new NXTRegulatedMotor(LEFT_MOTOR_PORT), false), new Engine(new NXTRegulatedMotor(RIGHT_MOTOR_PORT), false));
+
 		lightSensor = new LightSensor(LIGHT_SENSOR_PORT);
-		
+
 		motionSensor = new UltrasonicSensor(MOTION_SENSOR_PORT);
-		
+
 		System.out.println("Press any button to WIN!.");
 		Button.waitForAnyPress();
 	}
-	
+
 	/**
 	 * Spin until robot finds a target then go forward and try to push it out.
 	 * @throws InterruptedException 
@@ -53,76 +42,76 @@ public class Robot {
 	public void standardRun() throws InterruptedException {
 		lightSensor.setFloodlight(true);
 		motionSensor.continuous();
-		
+		engines.setSpeed(60);
+
 		int range = 999;
 		while(true) {
-			// check for black line
-			if(lightSensor.readValue() > 630) {
-				engineA.rotate(180, false);
-				nxtEngines.forward();
-				Thread.sleep(1000);
-				continue;
+			// check for black line, black value at around 300. Dark color gives lower value than bright color.
+			if(lightSensor.readNormalizedValue() < 340) {
+				engines.rotate(180, false, true);
+				engines.forward(1000);
 			}
-			
-			// get distance to object in sight
-			range = motionSensor.getDistance();
-			
-			// if no object or too far away, ie off the table, rotate
-			if(range > 120) {
-				engineA.rotate(360, true);
-			}
-			
-			// if object in range go forward
-			else if(range < 120) {
-				nxtEngines.forward();
+			else {
+				// get distance to object in sight
+				range = motionSensor.getDistance();
+
+				// if no object or too far away, ie off the table, rotate
+				if(range > 120) {
+					engines.rotate(360, true, true);
+				}
+
+				// if object in range go forward
+				else if(range < 120) {
+					engines.forward();
+				}
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * TBA
 	 */
 	public void complicatedRun() {
 		// code here
 	}
-	
+
 	/**
 	 * Moves robot forward until it reaches a black line and then stops.
 	 */
 	public void handledning3() {
-		nxtEngines.setSpeed(30);
-		
-		nxtEngines.forward();
-		
+		engines.setSpeed(30);
+
+		engines.forward();
+
 		int lightVal = 0;
 		while(true) {
-			lightVal = lightSensor.readValue();
-			if(lightVal > 630) {
-				nxtEngines.stop();
+			lightVal = lightSensor.readNormalizedValue();
+			if(lightVal < 340) {
+				engines.stop();
 				break;
 			}
 		}
 	}
-	
+
 	/**
 	 * Moves robot forward, backwards and then spins.
 	 * @throws InterruptedException
 	 */
 	public void handledning2() throws InterruptedException {
-		nxtEngines.setSpeed(80);
-		
-		nxtEngines.forward();
+		engines.setSpeed(80);
+
+		engines.forward();
 		Thread.sleep(2000);
-		nxtEngines.stop();
+		engines.stop();
 		Thread.sleep(1000);
-		nxtEngines.backward();
+		engines.backward();
 		Thread.sleep(2000);
-		nxtEngines.stop();
+		engines.stop();
 		Thread.sleep(1000);
-		engineA.rotate(360);
+		engines.rotate(360, false, true);
 		Thread.sleep(2000);
-		nxtEngines.stop();
+		engines.stop();
 		System.out.println("Test complete.\nPress any button to exit program.");
 		Button.waitForAnyPress();
 	}
