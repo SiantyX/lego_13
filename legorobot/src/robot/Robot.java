@@ -40,15 +40,21 @@ public class Robot {
 	 * @throws InterruptedException 
 	 */
 	public void standardRun() throws InterruptedException {
+		Thread.sleep(2000);
+		
 		lightSensor.setFloodlight(true);
 		motionSensor.continuous();
 		engines.setSpeed(60);
 
+		int lastRange = 0;
+		
 		int range = 999;
 		while(true) {
 			// check for black line, black value at around 300. Dark color gives lower value than bright color.
 			if(lightSensor.readNormalizedValue() < 340) {
-				engines.rotate(180, false, true);
+				System.out.println("black");
+				engines.stop();
+				engines.rotate(360, false, true);
 				engines.forward(1000);
 			}
 			else {
@@ -57,11 +63,13 @@ public class Robot {
 
 				// if no object or too far away, ie off the table, rotate
 				if(range > 120) {
-					engines.rotate(360, true, true);
+					engines.stop();
+					engines.rotate(true);
 				}
 
 				// if object in range go forward
 				else if(range < 120) {
+					lastRange = range;
 					engines.forward();
 				}
 			}

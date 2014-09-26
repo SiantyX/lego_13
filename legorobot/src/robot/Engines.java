@@ -109,11 +109,24 @@ public class Engines {
 	 * @param clockWise
 	 */
 	public void rotate(int degrees, boolean imReturn, boolean clockWise) {
-		if(clockWise) {
-			motors.get(0).rotate(degrees, imReturn);
+		if (clockWise) {
+			motors.get(0).rotate(degrees*2, false);
+			motors.get(1).rotate(-degrees*2, imReturn);
 		}
 		else {
-			motors.get(1).rotate(degrees, imReturn);
+			motors.get(1).rotate(degrees*2, false);
+			motors.get(0).rotate(-degrees*2, imReturn);
+		}
+	}
+	
+	public void rotate(boolean clockWise) {
+		if (clockWise) {
+			motors.get(0).forward();
+			motors.get(1).backward();
+		}
+		else {
+			motors.get(0).backward();
+			motors.get(1).forward();
 		}
 	}
 }
