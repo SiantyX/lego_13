@@ -40,7 +40,7 @@ public class Robot {
 	public void debugRun() throws InterruptedException {
 		int light = 0;
 		lightSensor.setFloodlight(true);
-		
+
 		while(true) {
 			light = lightSensor.readNormalizedValue();
 			System.out.println(light);
@@ -56,9 +56,9 @@ public class Robot {
 		lightSensor.setFloodlight(true);
 		motionSensor.continuous();
 		engines.setSpeed(60);
-		
+
 		int range = 999;
-		
+
 		while(true) {
 			// check for black line, black value at around 300. Dark color gives lower value than bright color.
 			if(lightSensor.readNormalizedValue() < 450) {
@@ -87,8 +87,8 @@ public class Robot {
 	/**
 	 * Spins until it finds an enemy then goes forward. If it saw an enemy within the last 0.5 seconds then look both ways for the enemy because it can't be far away.
 	 * 
-	 * snurra andra hållet mot vad den vad mot när den hittade enemy
-	 * fortsätt backa under backing efter spin om enemy försvinner
+	 * snurra andra hållet mot vad den vad mot när den hittade enemy : 			klar
+	 * fortsätt backa under backing efter spin om enemy försvinner: 			klar
 	 * 
 	 * @throws InterruptedException 
 	 */
@@ -96,45 +96,44 @@ public class Robot {
 		lightSensor.setFloodlight(true);
 		motionSensor.continuous();
 		engines.setSpeed(100);
-		
+
+		boolean rotatingClockwise = true;
+		boolean rotatedClockwise = false;
+
 		int range = 999;
-		int lastRange = 999;
-		
-		SXTimer backing = new SXTimer();
-		SXTimer enemy = new SXTimer();
-		
+
+
+		SXTimer backingTimer = new SXTimer();
+
 		while(true) {
 			// check for black line, black value at around 300. Dark color gives lower value than bright color.
 			if(lightSensor.readNormalizedValue() < 500) {
 				engines.setSpeed(100);
 				engines.backward();
-				backing.reset(1000);
+				backingTimer.reset(1000);
 			}
 			else {
 				// get distance to object in sight
 				range = motionSensor.getDistance();
-				
+
 				// if object in range go forward
-				if(range < 120) {
+				if(range < 100) {
 					engines.setSpeed(100);
 					engines.forward();
-					enemy.reset(800);
-					lastRange = range;
+					backingTimer.pause();
+					rotatedClockwise = rotatingClockwise;
 				}
-				
-				// spin both ways if an enemy was seen in the last range*60 milliseconds. Will set spin speed relative to the range the enemy was last seen at.
-				else if(range > 120 && enemy.percentage() <= 50 && lastRange < 255) {
-					engines.setSpeed(100);
-					engines.rotate(false);
-				}
-				
-				// if no object or too far away, ie off the table, and not backing away from black line then rotate
-				else if(range > 120 && backing.check()) {
-					if(enemy.check()) {
-						engines.setSpeed(100);
+				else {
+					backingTimer.unpause();
+					if(backingTimer.check()) {
+						engines.backward();
 					}
-					
-					engines.rotate(true);
+
+					// if no object or too far away, ie off the table, and not backing away from black line then rotate
+					else {
+						rotatingClockwise = !rotatedClockwise;
+						engines.rotate(rotatingClockwise);
+					}
 				}
 			}
 		}

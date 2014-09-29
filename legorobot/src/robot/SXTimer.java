@@ -4,6 +4,7 @@ public class SXTimer {
 	private long oldTime;
 	private long updateInterval;
 	private boolean eqreset;
+	private long pauseVal;
 	
 	public SXTimer (long ui) {
 		eqreset = true;
@@ -13,10 +14,12 @@ public class SXTimer {
 	
 	public SXTimer () {
 		this(0);
+		pauseVal = 0;
 	}
 	
 	public void reset() {
 		oldTime = System.currentTimeMillis();
+		pauseVal = 0;
 	}
 	
 	/**
@@ -26,6 +29,7 @@ public class SXTimer {
 	public void reset(int ui) {
 		updateInterval = ui;
 		oldTime = System.currentTimeMillis();
+		pauseVal = 0;
 	}
 	
 	/**
@@ -76,5 +80,19 @@ public class SXTimer {
 		else {
 			return Math.round(((float)comp/(float)updateInterval)*100f);
 		}
+	}
+	
+	public void pause() {
+		if(pauseVal == 0)
+			pauseVal = System.currentTimeMillis() - oldTime;
+	}
+	
+	public void unpause() {
+		if(pauseVal == 0)
+			return;
+		
+		oldTime = System.currentTimeMillis();
+		updateInterval = pauseVal;
+		pauseVal = 0;
 	}
 }
