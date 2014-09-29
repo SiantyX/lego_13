@@ -61,6 +61,7 @@ public class SXTimer {
 		long thisTime = System.currentTimeMillis();
 		long comp = thisTime - oldTime;
 		if (comp > updateInterval) {
+			pauseVal = 0;
 			return true;
 		}
 		else {
@@ -83,7 +84,7 @@ public class SXTimer {
 	}
 	
 	public void pause() {
-		if(pauseVal == 0)
+		if(!check())
 			pauseVal = System.currentTimeMillis() - oldTime;
 	}
 	

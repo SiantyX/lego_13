@@ -32,7 +32,11 @@ public class Robot {
 		lightSensor = new LightSensor(LIGHT_SENSOR_PORT);
 
 		motionSensor = new UltrasonicSensor(MOTION_SENSOR_PORT);
-
+		
+		lightSensor.setFloodlight(true);
+		motionSensor.continuous();
+		engines.setSpeed(100);
+		
 		System.out.println("Press any button to WIN!.");
 		Button.waitForAnyPress();
 	}
@@ -53,12 +57,8 @@ public class Robot {
 	 * @throws InterruptedException 
 	 */
 	public void standardRun() throws InterruptedException {
-		lightSensor.setFloodlight(true);
-		motionSensor.continuous();
-		engines.setSpeed(60);
-
 		int range = 999;
-
+		
 		while(true) {
 			// check for black line, black value at around 300. Dark color gives lower value than bright color.
 			if(lightSensor.readNormalizedValue() < 450) {
@@ -110,7 +110,7 @@ public class Robot {
 			if(lightSensor.readNormalizedValue() < 500) {
 				engines.setSpeed(100);
 				engines.backward();
-				backingTimer.reset(1000);
+				backingTimer.reset(720);
 			}
 			else {
 				// get distance to object in sight
@@ -123,9 +123,11 @@ public class Robot {
 					backingTimer.pause();
 					rotatedClockwise = rotatingClockwise;
 				}
+				
+				// if still backingtimer even after enemy was seen
 				else {
 					backingTimer.unpause();
-					if(backingTimer.check()) {
+					if(!backingTimer.check()) {
 						engines.backward();
 					}
 
